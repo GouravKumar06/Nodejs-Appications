@@ -1,11 +1,13 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 
 const cors = require('cors');
 
+const PORT = process.env.PORT
 app.use(
   cors({
-    origin: "http://localhost:5500", // Replace with your frontend URL
+    origin: process.env.FRONTEND_URL, // Replace with your frontend URL
     methods: ["POST"],
     allowedHeaders: ["Content-Type"],
   })
@@ -31,6 +33,6 @@ app.post('/sum', (req, res) => {
 });
 
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server is running on port ${PORT}`);
 });
