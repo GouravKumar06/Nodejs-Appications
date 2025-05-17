@@ -1,6 +1,21 @@
 const express = require('express');
 const app = express();
 
+const count = {}
+
+function logsMiddleware(req, res, next) {
+    if (count[req.method]) {
+      count[req.method]++;
+    } else {
+      count[req.method] = 1;
+    }
+    console.log(`request is coming from ${req.url} via method ${req.method}  with time ${Date.now()}`);
+    console.log("count: ", count);
+    next();
+}
+
+app.use(logsMiddleware);
+
 
 app.use(express.json());
 
@@ -25,14 +40,14 @@ app.post("/create", (req, res) => {
 
 
 app.get("/get", (req, res) => {
-  if (todos.length === 0) {
-    return res.status(404).json({ error: "No todos found" });
-  }
+    if (todos.length === 0) {
+        return res.status(404).json({ error: "No todos found" });
+    }
 
-  res.status(200).json({
-    message: "Todos retrieved successfully",
-    todos,
-  });
+    res.status(200).json({
+        message: "Todos retrieved successfully",
+        todos,
+    });
 });
 
 
@@ -62,7 +77,7 @@ app.delete("/delete/:todoId", (req, res) => {
   todos = todos.filter((todo) => todo.id !== id);
 
   res.status(201).json({
-    message: "Todo created successfully",
+    message: "Todo deleted successfully",
     todos,
   });
 });
